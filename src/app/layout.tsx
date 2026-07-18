@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Anton, Inter } from "next/font/google";
+import { Anton, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
 const anton = Anton({
@@ -11,6 +11,12 @@ const anton = Anton({
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -25,7 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${anton.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${anton.variable} ${inter.variable} ${plexMono.variable}`}
+    >
       <body className="bg-black text-white antialiased selection:bg-white selection:text-black">
         {children}
       </body>

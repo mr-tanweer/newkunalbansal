@@ -34,7 +34,7 @@ export default function Nav() {
           KUNAL BANSAL
         </a>
 
-        <div className="hidden items-center gap-10 text-sm uppercase tracking-widest text-neutral-300 sm:flex">
+        <div className="hidden items-center gap-10 font-mono text-sm uppercase tracking-widest text-neutral-300 sm:flex">
           {links.map((link) => (
             <a
               key={link.href}
@@ -64,7 +64,7 @@ export default function Nav() {
       </nav>
 
       {open && (
-        <div className="flex flex-col gap-6 border-t border-white/10 bg-black px-6 py-8 text-lg uppercase tracking-widest sm:hidden">
+        <div className="flex flex-col gap-6 border-t border-white/10 bg-black px-6 py-8 font-mono text-lg uppercase tracking-widest sm:hidden">
           {links.map((link) => (
             <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
               {link.label}

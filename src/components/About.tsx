@@ -13,15 +13,16 @@ export default function About() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6 }}
         >
-          <p className="mb-3 text-sm uppercase tracking-[0.4em] text-neutral-400">About</p>
+          <p className="mb-3 font-mono text-sm uppercase tracking-[0.4em] text-neutral-400">About</p>
           <h2 className="font-display text-4xl leading-tight sm:text-5xl">
             A filmmaker with a decade of stories told.
           </h2>
           <p className="mt-6 max-w-lg text-lg leading-relaxed text-neutral-300">
-            Kunal Bansal is a film graduate and director with 10+ years of experience
-            crafting advertisements, fiction, corporate videos and documentaries for some
-            of the world&apos;s most recognisable brands. His work has collectively
-            crossed 150 million views — built one honest frame at a time.
+            Kunal Bansal is a film graduate and director with 10+ years of experience in
+            the industry. He has directed a wide range of content — ad films, fiction
+            films, corporate AVs and documentary films — amassing approximately
+            150 million+ views collectively across brands like Philips, Panasonic, KFC,
+            Toshiba, Amazon and more.
           </p>
         </motion.div>
 
@@ -36,7 +37,7 @@ export default function About() {
               className="border-t border-white/10 pt-4"
             >
               <p className="font-display text-4xl sm:text-5xl">{stat.value}</p>
-              <p className="mt-2 text-sm uppercase tracking-widest text-neutral-400">
+              <p className="mt-2 font-mono text-sm uppercase tracking-widest text-neutral-400">
                 {stat.label}
               </p>
             </motion.div>
