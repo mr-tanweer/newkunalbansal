@@ -9,7 +9,11 @@ const links = [
   { label: "Contact", href: "#contact" },
 ];
 
-export default function Nav() {
+export default function Nav({
+  contactEmail = "kunalbansal11@gmail.com",
+}: {
+  contactEmail?: string;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -45,7 +49,7 @@ export default function Nav() {
             </a>
           ))}
           <a
-            href="mailto:kunalbansal11@gmail.com"
+            href={`mailto:${contactEmail}`}
             className="rounded-full border border-white/30 px-4 py-2 text-xs tracking-widest text-white transition-colors hover:border-white hover:bg-white hover:text-black"
           >
             Let&apos;s Talk

@@ -1,4 +1,4 @@
-import type { Project } from "@/lib/data";
+import type { Project } from "@/lib/types";
 
 export function thumbnailFor(project: Project) {
   return project.platform === "vimeo"

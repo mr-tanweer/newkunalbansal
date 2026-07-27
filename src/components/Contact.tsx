@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export default function Contact() {
+export default function Contact({ email, phone }: { email: string; phone: string }) {
   return (
     <section id="contact" className="border-t border-white/10 px-6 py-28 sm:px-10">
       <motion.div
@@ -17,18 +17,18 @@ export default function Contact() {
         </h2>
 
         <a
-          href="mailto:kunalbansal11@gmail.com"
+          href={`mailto:${email}`}
           className="group mt-10 inline-flex items-center gap-4 text-2xl text-white transition-colors hover:text-neutral-300 sm:text-4xl"
         >
-          kunalbansal11@gmail.com
+          {email}
           <span className="transition-transform duration-300 group-hover:translate-x-2">→</span>
         </a>
 
         <a
-          href="tel:+919991100099"
+          href={`tel:${phone.replace(/[^+\d]/g, "")}`}
           className="mt-4 block font-mono text-lg text-neutral-400 transition-colors hover:text-white"
         >
-          +91-9991100099
+          {phone}
         </a>
       </motion.div>
 

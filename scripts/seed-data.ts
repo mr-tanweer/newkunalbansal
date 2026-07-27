@@ -1,14 +1,4 @@
-export type Category = "Commercial" | "Behind the Scenes";
-export type Platform = "vimeo" | "youtube";
-
-export type Project = {
-  title: string;
-  client: string;
-  category: Category;
-  platform: Platform;
-  videoId: string;
-  gradient: string;
-};
+import type { Category, Platform } from "../src/lib/types";
 
 const COMMERCIAL_GRADIENTS = [
   "from-red-600 via-red-800 to-neutral-900",
@@ -31,7 +21,14 @@ const BTS_GRADIENTS = [
   "from-zinc-600 via-zinc-800 to-black",
 ];
 
-export const projects: Project[] = [
+export const seedProjects: {
+  title: string;
+  client: string;
+  category: Category;
+  platform: Platform;
+  videoId: string;
+  gradient: string;
+}[] = [
   // Commercials / Ad Films
   { title: "BookMyForex", client: "MakeMyTrip", category: "Commercial", platform: "vimeo", videoId: "1087482561", gradient: COMMERCIAL_GRADIENTS[0] },
   { title: "Finger Lickin' Frames feat. The Great Khali", client: "KFC", category: "Commercial", platform: "vimeo", videoId: "1110586931", gradient: COMMERCIAL_GRADIENTS[1] },
@@ -65,9 +62,7 @@ export const projects: Project[] = [
   { title: "Making of TradeIndia Father's Day", client: "TradeIndia", category: "Behind the Scenes", platform: "youtube", videoId: "lbWgj5AkCuM", gradient: BTS_GRADIENTS[2] },
 ];
 
-export type Client = { name: string; logo: string };
-
-export const clients: Client[] = [
+export const seedClients: { name: string; logo: string }[] = [
   { name: "Ministry of Information & Broadcasting", logo: "/clients/mib.png" },
   { name: "Philips", logo: "/clients/philips.png" },
   { name: "Panasonic", logo: "/clients/panasonic.png" },
@@ -79,9 +74,21 @@ export const clients: Client[] = [
   { name: "BKT Tyres", logo: "/clients/bkt.png" },
 ];
 
-export const stats = [
-  { value: "10+", label: "Years of Experience" },
-  { value: "150M+", label: "Views Collectively" },
-  { value: `${clients.length}+`, label: "Brands Worked With" },
-  { value: "4", label: "Formats — Ads, Fiction, Corporate, Docs" },
-];
+export const seedSiteContent = {
+  heroEyebrow: "Film Director — 10+ Years",
+  heroTitle: "KUNAL BANSAL",
+  heroTagline:
+    "Crafting advertisements, fiction, corporate films and documentaries that have collectively earned 150 million+ views.",
+  aboutHeading: "A filmmaker with a decade of stories told.",
+  aboutParagraph:
+    "Kunal Bansal is a film graduate and director with 10+ years of experience in the industry. He has directed a wide range of content — ad films, fiction films, corporate AVs and documentary films — amassing approximately 150 million+ views collectively across brands like Philips, Panasonic, KFC, Toshiba, Amazon and more.",
+  profilePhoto: "/kunalimage.jpg",
+  stats: [
+    { value: "10+", label: "Years of Experience" },
+    { value: "150M+", label: "Views Collectively" },
+    { value: "9+", label: "Brands Worked With" },
+    { value: "4", label: "Formats — Ads, Fiction, Corporate, Docs" },
+  ],
+  contactEmail: "kunalbansal11@gmail.com",
+  contactPhone: "+91-9991100099",
+};

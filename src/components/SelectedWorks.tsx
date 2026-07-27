@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { projects, type Category, type Project } from "@/lib/data";
+import type { Category, Project } from "@/lib/types";
 import { thumbnailFor } from "@/lib/thumbnail";
 import VideoModal from "@/components/VideoModal";
 
@@ -28,7 +28,7 @@ function ProjectThumb({ project }: { project: Project }) {
   );
 }
 
-export default function SelectedWorks() {
+export default function SelectedWorks({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState<Category | "All">("All");
   const [visible, setVisible] = useState(INITIAL_COUNT);
   const [active, setActive] = useState<Project | null>(null);
@@ -77,7 +77,7 @@ export default function SelectedWorks() {
       <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.slice(0, visible).map((project, i) => (
           <motion.article
-            key={`${project.platform}-${project.videoId}`}
+            key={project.id}
             initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}

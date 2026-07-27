@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import type { Project } from "@/lib/data";
+import type { Project } from "@/lib/types";
 
 export default function VideoModal({
   project,

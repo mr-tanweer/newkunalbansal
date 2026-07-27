@@ -2,11 +2,19 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { stats } from "@/lib/data";
+import type { Stat } from "@/lib/types";
 
-const title = "KUNAL BANSAL";
-
-export default function Hero() {
+export default function Hero({
+  eyebrow,
+  title,
+  tagline,
+  stats,
+}: {
+  eyebrow: string;
+  title: string;
+  tagline: string;
+  stats: Stat[];
+}) {
   const sectionRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -53,7 +61,7 @@ export default function Hero() {
             className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 font-mono text-xs uppercase tracking-widest text-neutral-300 backdrop-blur-md"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-            Film Director — 10+ Years
+            {eyebrow}
           </motion.div>
 
           <h1 className="font-display flex flex-wrap text-[15vw] leading-[0.85] tracking-tight sm:text-[9vw] lg:text-[6.5vw]">
@@ -84,8 +92,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.9 }}
             className="mt-8 max-w-xl text-lg text-neutral-300 sm:text-xl"
           >
-            Crafting advertisements, fiction, corporate films and documentaries
-            that have collectively earned <span className="text-white">150 million+ views</span>.
+            {tagline}
           </motion.p>
         </motion.div>
 

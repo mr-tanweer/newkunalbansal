@@ -1,6 +1,6 @@
-import { clients } from "@/lib/data";
+import type { Client } from "@/lib/types";
 
-export default function Clients() {
+export default function Clients({ clients }: { clients: Client[] }) {
   const loop = [...clients, ...clients];
 
   return (
@@ -14,7 +14,7 @@ export default function Clients() {
         <div className="animate-marquee flex w-max items-center gap-16">
           {loop.map((client, i) => (
             <div
-              key={`${client.name}-${i}`}
+              key={`${client.id}-${i}`}
               className="flex shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}

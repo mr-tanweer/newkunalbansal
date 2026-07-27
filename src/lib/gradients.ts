@@ -1,0 +1,17 @@
+export const GRADIENT_OPTIONS: string[] = [
+  "from-red-600 via-red-800 to-neutral-900",
+  "from-sky-600 via-blue-800 to-slate-900",
+  "from-amber-500 via-orange-700 to-red-900",
+  "from-indigo-600 via-violet-700 to-neutral-900",
+  "from-slate-600 via-slate-800 to-black",
+  "from-emerald-500 via-green-700 to-neutral-900",
+  "from-yellow-500 via-orange-600 to-red-700",
+  "from-cyan-500 via-blue-700 to-indigo-900",
+  "from-fuchsia-600 via-purple-800 to-neutral-900",
+  "from-teal-600 via-cyan-800 to-neutral-900",
+  "from-rose-600 via-red-800 to-neutral-900",
+  "from-lime-500 via-green-700 to-emerald-900",
+  "from-neutral-600 via-neutral-800 to-black",
+  "from-stone-600 via-stone-800 to-black",
+  "from-zinc-600 via-zinc-800 to-black",
+];
