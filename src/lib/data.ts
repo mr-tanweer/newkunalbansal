@@ -65,21 +65,18 @@ export const projects: Project[] = [
   { title: "Making of TradeIndia Father's Day", client: "TradeIndia", category: "Behind the Scenes", platform: "youtube", videoId: "lbWgj5AkCuM", gradient: BTS_GRADIENTS[2] },
 ];
 
-export const clients = [
-  "Ministry of Information & Broadcasting",
-  "Philips",
-  "Panasonic",
-  "Amazon",
-  "KFC",
-  "Usha",
-  "Toshiba",
-  "BKT Tyres",
-  "MakeMyTrip",
-  "Yoga Bar",
-  "Henry Harvin",
-  "Jain University",
-  "TradeIndia",
-  "Bytescare",
+export type Client = { name: string; logo: string };
+
+export const clients: Client[] = [
+  { name: "Ministry of Information & Broadcasting", logo: "/clients/mib.png" },
+  { name: "Philips", logo: "/clients/philips.jpeg" },
+  { name: "Panasonic", logo: "/clients/panasonic.jpg" },
+  { name: "Amazon", logo: "/clients/amazon.png" },
+  { name: "KFC", logo: "/clients/kfc.png" },
+  { name: "Usha", logo: "/clients/usha.webp" },
+  { name: "Trends Capital Mall", logo: "/clients/trends-capital-mall.png" },
+  { name: "Toshiba", logo: "/clients/toshiba.png" },
+  { name: "BKT Tyres", logo: "/clients/bkt.png" },
 ];
 
 export const stats = [

@@ -95,12 +95,6 @@ export default function SelectedWorks() {
                   </svg>
                 </div>
               </div>
-              <span className="absolute left-4 top-4 rounded-full bg-black/50 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-white backdrop-blur">
-                {project.category}
-              </span>
-              <span className="absolute right-4 top-4 rounded-full bg-black/50 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-white/70 backdrop-blur">
-                {project.platform}
-              </span>
             </div>
 
             <div className="mt-4 flex items-baseline justify-between gap-4">
