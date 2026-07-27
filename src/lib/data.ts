@@ -73,7 +73,7 @@ export const clients: Client[] = [
   { name: "Panasonic", logo: "/clients/panasonic.png" },
   { name: "Amazon", logo: "/clients/amazon.png" },
   { name: "KFC", logo: "/clients/kfc.png" },
-  { name: "Usha", logo: "/clients/usha.webp" },
+  { name: "Usha", logo: "/clients/usha.png" },
   { name: "Trends Capital Mall", logo: "/clients/trends-capital-mall.png" },
   { name: "Toshiba", logo: "/clients/toshiba.png" },
   { name: "BKT Tyres", logo: "/clients/bkt.png" },

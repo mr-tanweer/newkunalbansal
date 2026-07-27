@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { stats } from "@/lib/data";
 
@@ -8,15 +8,11 @@ const title = "KUNAL BANSAL";
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const photoRef = useRef<HTMLDivElement>(null);
-  const [spotlightOn, setSpotlightOn] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
-  const imgScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
@@ -26,14 +22,6 @@ export default function Hero() {
     const rect = el.getBoundingClientRect();
     el.style.setProperty("--x", `${e.clientX - rect.left}px`);
     el.style.setProperty("--y", `${e.clientY - rect.top}px`);
-  };
-
-  const handlePhotoMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = photoRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-    el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
   return (
@@ -99,63 +87,23 @@ export default function Hero() {
             Crafting advertisements, fiction, corporate films and documentaries
             that have collectively earned <span className="text-white">150 million+ views</span>.
           </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 1.1 }}
-            className="mt-14 flex flex-wrap items-center gap-x-10 gap-y-4  pt-8"
-          >
-            {stats.slice(0, 3).map((stat) => (
-              <div key={stat.label} className="flex items-baseline gap-2">
-                <span className="font-display text-2xl text-white sm:text-3xl">{stat.value}</span>
-                <span className="font-mono text-xs uppercase tracking-widest text-neutral-500">
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </motion.div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.9 }}
           style={{ y: contentY, opacity: contentOpacity }}
-          className="relative"
+          className="grid grid-cols-2 gap-x-8 gap-y-8 border-t border-white/10 pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-12"
         >
-          <div
-            ref={photoRef}
-            onMouseMove={handlePhotoMouseMove}
-            onMouseEnter={() => setSpotlightOn(true)}
-            onMouseLeave={() => setSpotlightOn(false)}
-            className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <motion.img
-              src="/kunalnewpng.png"
-              alt="Kunal Bansal on set"
-              style={{ y: imgY, scale: imgScale }}
-              className="absolute inset-0 h-full w-full object-cover grayscale"
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <motion.img
-              src="/kunalnewpng.png"
-              alt=""
-              aria-hidden
-              style={{
-                y: imgY,
-                scale: imgScale,
-                clipPath: `circle(${spotlightOn ? 110 : 0}px at var(--mx, 50%) var(--my, 50%))`,
-              }}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-white/70">
-              <span>Kunal Bansal</span>
-              <span className="text-white/40">On Set</span>
+          {stats.map((stat) => (
+            <div key={stat.label}>
+              <p className="font-display text-3xl text-white sm:text-4xl">{stat.value}</p>
+              <p className="mt-2 font-mono text-xs uppercase tracking-widest text-neutral-500">
+                {stat.label}
+              </p>
             </div>
-          </div>
+          ))}
         </motion.div>
       </div>
 
