@@ -16,7 +16,7 @@ export default function Clients() {
           {loop.map((client, i) => (
             <div
               key={`${client.name}-${i}`}
-              className="flex h-20 w-40 shrink-0 items-center justify-center rounded-xl bg-white p-4 opacity-90 grayscale transition-all hover:opacity-100 hover:grayscale-0 sm:h-24 sm:w-48"
+              className="flex h-16 w-32 shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100 sm:h-20 sm:w-40"
             >
               <Image
                 src={client.logo}
