@@ -13,7 +13,7 @@ async function fetchWithTimeout(url: string, ms: number): Promise<Response> {
 async function resolveVimeoThumbnail(videoId: string): Promise<string | null> {
   try {
     const res = await fetchWithTimeout(
-      `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${videoId}`,
+      `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${videoId}&width=1280`,
       8000
     );
     if (!res.ok) return null;
@@ -22,6 +22,24 @@ async function resolveVimeoThumbnail(videoId: string): Promise<string | null> {
   } catch {
     return null;
   }
+}
+
+async function resolveYoutubeThumbnail(videoId: string): Promise<string> {
+  const maxres = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  const fallback = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  try {
+    const res = await fetchWithTimeout(maxres, 6000);
+    if (res.ok) {
+      const buf = await res.arrayBuffer();
+      // YouTube serves a small greyish placeholder (a few KB) with a 200 status
+      // when no maxres thumbnail was ever uploaded for the video — real
+      // maxresdefault images are consistently much larger than that.
+      if (buf.byteLength > 5000) return maxres;
+    }
+  } catch {
+    // fall through to hqdefault
+  }
+  return fallback;
 }
 
 /**
@@ -33,7 +51,7 @@ export async function resolveThumbnail(
   videoId: string
 ): Promise<string | null> {
   if (platform === "youtube") {
-    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    return resolveYoutubeThumbnail(videoId);
   }
   if (platform === "vimeo") {
     const resolved = await resolveVimeoThumbnail(videoId);
