@@ -7,19 +7,19 @@ import { thumbnailFor } from "@/lib/thumbnail";
 import VideoModal from "@/components/VideoModal";
 
 const INITIAL_COUNT = 9;
-const FILTERS: Array<Category | "All"> = ["All", "Commercial", "Behind the Scenes"];
 
 function ProjectThumb({ project }: { project: Project }) {
   const [errored, setErrored] = useState(false);
+  const src = thumbnailFor(project);
 
-  if (errored) {
+  if (errored || !src) {
     return <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient}`} />;
   }
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={thumbnailFor(project)}
+      src={src}
       alt={project.title}
       loading="lazy"
       onError={() => setErrored(true)}
@@ -28,14 +28,22 @@ function ProjectThumb({ project }: { project: Project }) {
   );
 }
 
-export default function SelectedWorks({ projects }: { projects: Project[] }) {
-  const [filter, setFilter] = useState<Category | "All">("All");
+export default function SelectedWorks({
+  projects,
+  categories,
+}: {
+  projects: Project[];
+  categories: Category[];
+}) {
+  const [filter, setFilter] = useState<string>("All");
   const [visible, setVisible] = useState(INITIAL_COUNT);
   const [active, setActive] = useState<Project | null>(null);
 
+  const filters = ["All", ...categories.map((c) => c.name)];
+
   const filtered = useMemo(
     () => (filter === "All" ? projects : projects.filter((p) => p.category === filter)),
-    [filter]
+    [filter, projects]
   );
 
   return (
@@ -56,7 +64,7 @@ export default function SelectedWorks({ projects }: { projects: Project[] }) {
       </motion.div>
 
       <div className="mb-12 flex flex-wrap gap-3">
-        {FILTERS.map((f) => (
+        {filters.map((f) => (
           <button
             key={f}
             onClick={() => {

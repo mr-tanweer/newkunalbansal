@@ -9,16 +9,44 @@ const inputClass =
   "mt-2 w-full rounded-lg border border-white/15 bg-black px-4 py-2.5 text-sm font-sans normal-case tracking-normal text-white outline-none focus:border-white/40";
 const labelClass = "block font-mono text-xs uppercase tracking-widest text-neutral-400";
 
-export default function ProjectForm({ project }: { project?: Project }) {
+const videoIdPlaceholder: Record<Platform, string> = {
+  vimeo: "e.g. 1110586931",
+  youtube: "e.g. 1z98ssEbzi8",
+  instagram: "e.g. DA1b2C3dEfg (reel shortcode)",
+};
+
+export default function ProjectForm({
+  project,
+  categories,
+}: {
+  project?: Project;
+  categories: Category[];
+}) {
   const router = useRouter();
   const [title, setTitle] = useState(project?.title ?? "");
   const [client, setClient] = useState(project?.client ?? "");
-  const [category, setCategory] = useState<Category>(project?.category ?? "Commercial");
+  const [category, setCategory] = useState(project?.category ?? categories[0]?.name ?? "");
   const [platform, setPlatform] = useState<Platform>(project?.platform ?? "vimeo");
   const [videoId, setVideoId] = useState(project?.videoId ?? "");
+  const [thumbnail, setThumbnail] = useState(project?.thumbnail ?? "");
   const [gradient, setGradient] = useState(project?.gradient ?? GRADIENT_OPTIONS[0]);
   const [saving, setSaving] = useState(false);
+  const [fetchingThumb, setFetchingThumb] = useState(false);
   const [error, setError] = useState("");
+
+  const handleAutoFetchThumbnail = async () => {
+    if (!videoId) return;
+    setFetchingThumb(true);
+    try {
+      const res = await fetch(
+        `/api/admin/thumbnail?platform=${platform}&videoId=${encodeURIComponent(videoId)}`
+      );
+      const data = await res.json();
+      if (data.thumbnail) setThumbnail(data.thumbnail);
+    } finally {
+      setFetchingThumb(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +59,7 @@ export default function ProjectForm({ project }: { project?: Project }) {
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, client, category, platform, videoId, gradient }),
+      body: JSON.stringify({ title, client, category, platform, videoId, thumbnail, gradient }),
     });
 
     if (!res.ok) {
@@ -79,11 +107,16 @@ export default function ProjectForm({ project }: { project?: Project }) {
           Category
           <select
             value={category}
-            onChange={(e) => setCategory(e.target.value as Category)}
+            onChange={(e) => setCategory(e.target.value)}
+            required
             className={inputClass}
           >
-            <option value="Commercial">Commercial</option>
-            <option value="Behind the Scenes">Behind the Scenes</option>
+            {categories.length === 0 && <option value="">No categories yet</option>}
+            {categories.map((c) => (
+              <option key={c.id} value={c.name}>
+                {c.name}
+              </option>
+            ))}
           </select>
         </label>
 
@@ -96,6 +129,7 @@ export default function ProjectForm({ project }: { project?: Project }) {
           >
             <option value="vimeo">Vimeo</option>
             <option value="youtube">YouTube</option>
+            <option value="instagram">Instagram</option>
           </select>
         </label>
       </div>
@@ -106,10 +140,38 @@ export default function ProjectForm({ project }: { project?: Project }) {
           value={videoId}
           onChange={(e) => setVideoId(e.target.value)}
           required
-          placeholder={platform === "vimeo" ? "e.g. 1110586931" : "e.g. 1z98ssEbzi8"}
+          placeholder={videoIdPlaceholder[platform]}
           className={inputClass}
         />
       </label>
+
+      <div>
+        <label className={labelClass}>
+          Thumbnail Image URL
+          <div className="mt-2 flex gap-2">
+            <input
+              value={thumbnail}
+              onChange={(e) => setThumbnail(e.target.value)}
+              placeholder="Auto-fetched from video, or paste your own"
+              className={`${inputClass} mt-0`}
+            />
+            <button
+              type="button"
+              onClick={handleAutoFetchThumbnail}
+              disabled={!videoId || fetchingThumb}
+              className="shrink-0 rounded-lg border border-white/15 px-4 text-xs font-mono uppercase tracking-widest text-neutral-300 hover:border-white/40 disabled:opacity-40"
+            >
+              {fetchingThumb ? "Fetching…" : "Auto-fetch"}
+            </button>
+          </div>
+        </label>
+        {thumbnail && (
+          <div className="mt-2 h-24 w-40 overflow-hidden rounded-lg border border-white/10 bg-neutral-950">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={thumbnail} alt="Thumbnail preview" className="h-full w-full object-cover" />
+          </div>
+        )}
+      </div>
 
       <label className={labelClass}>
         Gradient (fallback thumbnail color)

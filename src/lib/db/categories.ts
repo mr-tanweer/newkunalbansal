@@ -1,52 +1,49 @@
 import { ObjectId, type WithId, type Document } from "mongodb";
 import { getDb } from "./mongodb";
-import type { Client } from "@/lib/types";
+import type { Category } from "@/lib/types";
 
-export type ClientDoc = {
+export type CategoryDoc = {
   _id: ObjectId;
   name: string;
-  logo: string;
   order: number;
   createdAt: Date;
   updatedAt: Date;
 };
 
-export type NewClientInput = {
+export type NewCategoryInput = {
   name: string;
-  logo: string;
 };
 
 function collection() {
-  return getDb().then((db) => db.collection<ClientDoc>("clients"));
+  return getDb().then((db) => db.collection<CategoryDoc>("categories"));
 }
 
-export function serializeClient(doc: WithId<Document> | ClientDoc): Client {
-  const d = doc as ClientDoc;
+export function serializeCategory(doc: WithId<Document> | CategoryDoc): Category {
+  const d = doc as CategoryDoc;
   return {
     id: d._id.toString(),
     name: d.name,
-    logo: d.logo,
     order: d.order,
   };
 }
 
-export async function listClients(): Promise<ClientDoc[]> {
+export async function listCategories(): Promise<CategoryDoc[]> {
   const col = await collection();
   return col.find({}).sort({ order: 1, _id: 1 }).toArray();
 }
 
-export async function getClientById(id: string): Promise<ClientDoc | null> {
+export async function getCategoryById(id: string): Promise<CategoryDoc | null> {
   if (!ObjectId.isValid(id)) return null;
   const col = await collection();
   return col.findOne({ _id: new ObjectId(id) });
 }
 
-export async function createClient(input: NewClientInput): Promise<ClientDoc> {
+export async function createCategory(input: NewCategoryInput): Promise<CategoryDoc> {
   const col = await collection();
   const last = await col.find({}).sort({ order: -1 }).limit(1).toArray();
   const order = last.length > 0 ? last[0].order + 1 : 0;
   const now = new Date();
-  const doc: ClientDoc = {
+  const doc: CategoryDoc = {
     _id: new ObjectId(),
     ...input,
     order,
@@ -57,10 +54,10 @@ export async function createClient(input: NewClientInput): Promise<ClientDoc> {
   return doc;
 }
 
-export async function updateClient(
+export async function updateCategory(
   id: string,
-  input: Partial<NewClientInput> & { order?: number }
-): Promise<ClientDoc | null> {
+  input: Partial<NewCategoryInput> & { order?: number }
+): Promise<CategoryDoc | null> {
   if (!ObjectId.isValid(id)) return null;
   const col = await collection();
   await col.updateOne(
@@ -70,14 +67,14 @@ export async function updateClient(
   return col.findOne({ _id: new ObjectId(id) });
 }
 
-export async function deleteClient(id: string): Promise<boolean> {
+export async function deleteCategory(id: string): Promise<boolean> {
   if (!ObjectId.isValid(id)) return false;
   const col = await collection();
   const res = await col.deleteOne({ _id: new ObjectId(id) });
   return res.deletedCount === 1;
 }
 
-export async function moveClient(id: string, direction: "up" | "down"): Promise<void> {
+export async function moveCategory(id: string, direction: "up" | "down"): Promise<void> {
   const col = await collection();
   const sorted = await col.find({}).sort({ order: 1, _id: 1 }).toArray();
   const index = sorted.findIndex((c) => c._id.toString() === id);
@@ -93,8 +90,8 @@ export async function moveClient(id: string, direction: "up" | "down"): Promise<
   await col.updateOne({ _id: swapWith._id }, { $set: { order: current.order } });
 }
 
-/** Moves a client to an exact 1-based position, renumbering the whole list. */
-export async function reorderClient(id: string, position: number): Promise<void> {
+/** Moves a category to an exact 1-based position, renumbering the whole list. */
+export async function reorderCategory(id: string, position: number): Promise<void> {
   const col = await collection();
   const sorted = await col.find({}).sort({ order: 1, _id: 1 }).toArray();
   const fromIndex = sorted.findIndex((c) => c._id.toString() === id);

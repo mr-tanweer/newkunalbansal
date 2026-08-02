@@ -1,14 +1,15 @@
 import { ObjectId, type WithId, type Document } from "mongodb";
 import { getDb } from "./mongodb";
-import type { Project, Category, Platform } from "@/lib/types";
+import type { Project, Platform } from "@/lib/types";
 
 export type ProjectDoc = {
   _id: ObjectId;
   title: string;
   client: string;
-  category: Category;
+  category: string;
   platform: Platform;
   videoId: string;
+  thumbnail: string;
   gradient: string;
   order: number;
   createdAt: Date;
@@ -18,9 +19,10 @@ export type ProjectDoc = {
 export type NewProjectInput = {
   title: string;
   client: string;
-  category: Category;
+  category: string;
   platform: Platform;
   videoId: string;
+  thumbnail: string;
   gradient: string;
 };
 
@@ -37,6 +39,7 @@ export function serializeProject(doc: WithId<Document> | ProjectDoc): Project {
     category: d.category,
     platform: d.platform,
     videoId: d.videoId,
+    thumbnail: d.thumbnail ?? "",
     gradient: d.gradient,
     order: d.order,
   };
@@ -71,7 +74,7 @@ export async function createProject(input: NewProjectInput): Promise<ProjectDoc>
 
 export async function updateProject(
   id: string,
-  input: Partial<NewProjectInput>
+  input: Partial<NewProjectInput> & { order?: number }
 ): Promise<ProjectDoc | null> {
   if (!ObjectId.isValid(id)) return null;
   const col = await collection();
@@ -103,4 +106,20 @@ export async function moveProject(id: string, direction: "up" | "down"): Promise
 
   await col.updateOne({ _id: current._id }, { $set: { order: swapWith.order } });
   await col.updateOne({ _id: swapWith._id }, { $set: { order: current.order } });
+}
+
+/** Moves a project to an exact 1-based position, renumbering the whole list. */
+export async function reorderProject(id: string, position: number): Promise<void> {
+  const col = await collection();
+  const sorted = await col.find({}).sort({ order: 1, _id: 1 }).toArray();
+  const fromIndex = sorted.findIndex((p) => p._id.toString() === id);
+  if (fromIndex === -1) return;
+
+  const [moved] = sorted.splice(fromIndex, 1);
+  const toIndex = Math.min(Math.max(position - 1, 0), sorted.length);
+  sorted.splice(toIndex, 0, moved);
+
+  await Promise.all(
+    sorted.map((doc, i) => col.updateOne({ _id: doc._id }, { $set: { order: i } }))
+  );
 }

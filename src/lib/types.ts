@@ -1,13 +1,19 @@
-export type Category = "Commercial" | "Behind the Scenes";
-export type Platform = "vimeo" | "youtube";
+export type Platform = "vimeo" | "youtube" | "instagram";
+
+export type Category = {
+  id: string;
+  name: string;
+  order: number;
+};
 
 export type Project = {
   id: string;
   title: string;
   client: string;
-  category: Category;
+  category: string;
   platform: Platform;
   videoId: string;
+  thumbnail: string;
   gradient: string;
   order: number;
 };

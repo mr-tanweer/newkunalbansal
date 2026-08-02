@@ -1,25 +1,30 @@
 import { getDb } from "../src/lib/db/mongodb";
-import { seedProjects, seedClients, seedSiteContent } from "./seed-data";
+import { resolveThumbnail } from "../src/lib/thumbnailResolver";
+import { seedProjects, seedCategories, seedClients, seedSiteContent } from "./seed-data";
 
 async function main() {
   const force = process.argv.includes("--force");
   const db = await getDb();
 
   const projectsCol = db.collection("projects");
+  const categoriesCol = db.collection("categories");
   const clientsCol = db.collection("clients");
   const contentCol = db.collection("siteContent");
 
-  const [existingProjects, existingClients, existingContent] = await Promise.all([
-    projectsCol.countDocuments(),
-    clientsCol.countDocuments(),
-    contentCol.countDocuments({ _id: "singleton" as never }),
-  ]);
+  const [existingProjects, existingCategories, existingClients, existingContent] =
+    await Promise.all([
+      projectsCol.countDocuments(),
+      categoriesCol.countDocuments(),
+      clientsCol.countDocuments(),
+      contentCol.countDocuments({ _id: "singleton" as never }),
+    ]);
 
-  const hasExisting = existingProjects > 0 || existingClients > 0 || existingContent > 0;
+  const hasExisting =
+    existingProjects > 0 || existingCategories > 0 || existingClients > 0 || existingContent > 0;
 
   if (hasExisting && !force) {
     console.log(
-      `Database already has data (projects: ${existingProjects}, clients: ${existingClients}, siteContent: ${existingContent}). Pass --force to overwrite.`
+      `Database already has data (projects: ${existingProjects}, categories: ${existingCategories}, clients: ${existingClients}, siteContent: ${existingContent}). Pass --force to overwrite.`
     );
     process.exit(0);
   }
@@ -27,6 +32,7 @@ async function main() {
   if (force) {
     await Promise.all([
       projectsCol.deleteMany({}),
+      categoriesCol.deleteMany({}),
       clientsCol.deleteMany({}),
       contentCol.deleteMany({}),
     ]);
@@ -34,12 +40,24 @@ async function main() {
 
   const now = new Date();
 
-  const projectDocs = seedProjects.map((p, i) => ({
-    ...p,
+  console.log("Resolving thumbnails…");
+  const projectDocs = await Promise.all(
+    seedProjects.map(async (p, i) => ({
+      ...p,
+      thumbnail: (await resolveThumbnail(p.platform, p.videoId)) ?? "",
+      order: i,
+      createdAt: now,
+      updatedAt: now,
+    }))
+  );
+
+  const categoryDocs = seedCategories.map((c, i) => ({
+    ...c,
     order: i,
     createdAt: now,
     updatedAt: now,
   }));
+
   const clientDocs = seedClients.map((c, i) => ({
     ...c,
     order: i,
@@ -48,11 +66,12 @@ async function main() {
   }));
 
   await projectsCol.insertMany(projectDocs);
+  await categoriesCol.insertMany(categoryDocs);
   await clientsCol.insertMany(clientDocs);
   await contentCol.insertOne({ _id: "singleton" as never, ...seedSiteContent, updatedAt: now });
 
   console.log(
-    `Seeded ${projectDocs.length} projects, ${clientDocs.length} clients, and 1 site content document.`
+    `Seeded ${projectDocs.length} projects, ${categoryDocs.length} categories, ${clientDocs.length} clients, and 1 site content document.`
   );
   process.exit(0);
 }

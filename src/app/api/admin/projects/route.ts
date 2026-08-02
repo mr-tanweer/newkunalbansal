@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { listProjects, createProject, serializeProject } from "@/lib/db/projects";
+import { resolveThumbnail } from "@/lib/thumbnailResolver";
+import type { Platform } from "@/lib/types";
 
 export async function GET() {
   const projects = await listProjects();
@@ -20,12 +22,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid project data" }, { status: 400 });
   }
 
+  const manualThumbnail = typeof body.thumbnail === "string" ? body.thumbnail.trim() : "";
+  const thumbnail =
+    manualThumbnail || (await resolveThumbnail(body.platform as Platform, body.videoId)) || "";
+
   const project = await createProject({
     title: body.title,
     client: body.client,
     category: body.category,
     platform: body.platform,
     videoId: body.videoId,
+    thumbnail,
     gradient: body.gradient,
   });
 

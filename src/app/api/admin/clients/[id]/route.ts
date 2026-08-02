@@ -24,9 +24,12 @@ export async function PATCH(
   const body = await request.json().catch(() => null);
   if (!body) return NextResponse.json({ error: "Invalid body" }, { status: 400 });
 
-  const update: Record<string, string> = {};
+  const update: Record<string, string | number> = {};
   if (typeof body.name === "string") update.name = body.name;
   if (typeof body.logo === "string") update.logo = body.logo;
+  if (typeof body.order === "number" && Number.isFinite(body.order)) {
+    update.order = body.order;
+  }
 
   const client = await updateClient(id, update);
   if (!client) return NextResponse.json({ error: "Not found" }, { status: 404 });

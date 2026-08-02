@@ -25,7 +25,9 @@ export default function VideoModal({
   const src = project
     ? project.platform === "vimeo"
       ? `https://player.vimeo.com/video/${project.videoId}?autoplay=1&title=0&byline=0&portrait=0`
-      : `https://www.youtube.com/embed/${project.videoId}?autoplay=1&rel=0`
+      : project.platform === "youtube"
+        ? `https://www.youtube.com/embed/${project.videoId}?autoplay=1&rel=0`
+        : `https://www.instagram.com/reel/${project.videoId}/embed`
     : "";
 
   return (
@@ -53,18 +55,18 @@ export default function VideoModal({
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
                 allowFullScreen
               />
+              <button
+                onClick={onClose}
+                aria-label="Close"
+                className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur transition-colors hover:bg-black/80"
+              >
+                ✕
+              </button>
             </div>
             <div className="mt-4 flex items-baseline justify-between text-white">
               <h3 className="text-lg font-medium">{project.title}</h3>
               <span className="font-mono text-sm text-neutral-400">{project.client}</span>
             </div>
-            <button
-              onClick={onClose}
-              aria-label="Close"
-              className="absolute -top-12 right-0 font-mono text-sm uppercase tracking-widest text-neutral-300 transition-colors hover:text-white sm:top-auto sm:-right-12 sm:-translate-y-1/2"
-            >
-              Close ✕
-            </button>
           </motion.div>
         </motion.div>
       )}

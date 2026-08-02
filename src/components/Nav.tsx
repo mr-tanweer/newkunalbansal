@@ -10,9 +10,9 @@ const links = [
 ];
 
 export default function Nav({
-  contactEmail = "kunalbansal11@gmail.com",
+  contactPhone = "+91-9991100099",
 }: {
-  contactEmail?: string;
+  contactPhone?: string;
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -49,7 +49,7 @@ export default function Nav({
             </a>
           ))}
           <a
-            href={`mailto:${contactEmail}`}
+            href={`tel:${contactPhone.replace(/[^+\d]/g, "")}`}
             className="rounded-full border border-white/30 px-4 py-2 text-xs tracking-widest text-white transition-colors hover:border-white hover:bg-white hover:text-black"
           >
             Let&apos;s Talk

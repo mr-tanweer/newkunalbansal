@@ -24,9 +24,12 @@ export async function PATCH(
   const body = await request.json().catch(() => null);
   if (!body) return NextResponse.json({ error: "Invalid body" }, { status: 400 });
 
-  const update: Record<string, string> = {};
-  for (const key of ["title", "client", "category", "platform", "videoId", "gradient"]) {
+  const update: Record<string, string | number> = {};
+  for (const key of ["title", "client", "category", "platform", "videoId", "thumbnail", "gradient"]) {
     if (typeof body[key] === "string") update[key] = body[key];
+  }
+  if (typeof body.order === "number" && Number.isFinite(body.order)) {
+    update.order = body.order;
   }
 
   const project = await updateProject(id, update);

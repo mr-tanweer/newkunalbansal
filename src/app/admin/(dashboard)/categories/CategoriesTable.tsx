@@ -3,16 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { Client } from "@/lib/types";
+import type { Category } from "@/lib/types";
 
-export default function ClientsTable({ clients }: { clients: Client[] }) {
+export default function CategoriesTable({ categories }: { categories: Category[] }) {
   const router = useRouter();
   const [reorderingId, setReorderingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const reorder = async (id: string, position: number) => {
     setReorderingId(id);
-    await fetch(`/api/admin/clients/${id}/reorder`, {
+    await fetch(`/api/admin/categories/${id}/reorder`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ position }),
@@ -22,9 +22,9 @@ export default function ClientsTable({ clients }: { clients: Client[] }) {
   };
 
   const remove = async (id: string) => {
-    if (!confirm("Delete this client?")) return;
+    if (!confirm("Delete this category? Projects using it will keep the old name.")) return;
     setDeletingId(id);
-    await fetch(`/api/admin/clients/${id}`, { method: "DELETE" });
+    await fetch(`/api/admin/categories/${id}`, { method: "DELETE" });
     router.refresh();
     setDeletingId(null);
   };
@@ -34,31 +34,26 @@ export default function ClientsTable({ clients }: { clients: Client[] }) {
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-white/10 font-mono text-xs uppercase tracking-widest text-neutral-500">
-            <th className="px-4 py-3">Logo</th>
             <th className="px-4 py-3">Name</th>
             <th className="px-4 py-3">#</th>
             <th className="px-4 py-3" />
           </tr>
         </thead>
         <tbody>
-          {clients.map((client, i) => (
-            <tr key={client.id} className="border-b border-white/5 last:border-0">
-              <td className="px-4 py-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={client.logo} alt={client.name} className="h-7 w-auto object-contain" />
-              </td>
-              <td className="px-4 py-3 text-white">{client.name}</td>
+          {categories.map((category, i) => (
+            <tr key={category.id} className="border-b border-white/5 last:border-0">
+              <td className="px-4 py-3 text-white">{category.name}</td>
               <td className="px-4 py-3">
                 <input
                   key={i}
                   type="number"
                   min={1}
-                  max={clients.length}
+                  max={categories.length}
                   defaultValue={i + 1}
-                  disabled={reorderingId === client.id}
+                  disabled={reorderingId === category.id}
                   onBlur={(e) => {
                     const value = Number(e.target.value);
-                    if (value && value !== i + 1) reorder(client.id, value);
+                    if (value && value !== i + 1) reorder(category.id, value);
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") (e.target as HTMLInputElement).blur();
@@ -68,15 +63,15 @@ export default function ClientsTable({ clients }: { clients: Client[] }) {
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest">
-                  <Link href={`/admin/clients/${client.id}`} className="text-neutral-300 hover:text-white">
+                  <Link href={`/admin/categories/${category.id}`} className="text-neutral-300 hover:text-white">
                     Edit
                   </Link>
                   <button
-                    onClick={() => remove(client.id)}
-                    disabled={deletingId === client.id}
+                    onClick={() => remove(category.id)}
+                    disabled={deletingId === category.id}
                     className="text-red-400 hover:text-red-300 disabled:opacity-40"
                   >
-                    {deletingId === client.id ? "Deleting…" : "Delete"}
+                    {deletingId === category.id ? "Deleting…" : "Delete"}
                   </button>
                 </div>
               </td>

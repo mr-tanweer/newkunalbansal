@@ -1,4 +1,4 @@
-import type { Category, Platform } from "../src/lib/types";
+import type { Platform } from "../src/lib/types";
 
 const COMMERCIAL_GRADIENTS = [
   "from-red-600 via-red-800 to-neutral-900",
@@ -24,7 +24,7 @@ const BTS_GRADIENTS = [
 export const seedProjects: {
   title: string;
   client: string;
-  category: Category;
+  category: string;
   platform: Platform;
   videoId: string;
   gradient: string;
@@ -60,6 +60,11 @@ export const seedProjects: {
   { title: "Philips — Behind the Scenes", client: "Philips", category: "Behind the Scenes", platform: "vimeo", videoId: "897402886", gradient: BTS_GRADIENTS[0] },
   { title: "Rosa — Behind the Scenes", client: "Rosa", category: "Behind the Scenes", platform: "vimeo", videoId: "897403204", gradient: BTS_GRADIENTS[1] },
   { title: "Making of TradeIndia Father's Day", client: "TradeIndia", category: "Behind the Scenes", platform: "youtube", videoId: "lbWgj5AkCuM", gradient: BTS_GRADIENTS[2] },
+];
+
+export const seedCategories: { name: string }[] = [
+  { name: "Commercial" },
+  { name: "Behind the Scenes" },
 ];
 
 export const seedClients: { name: string; logo: string }[] = [

@@ -1,4 +1,25 @@
+"use client";
+
+import { useState } from "react";
 import type { Client } from "@/lib/types";
+
+function ClientLogo({ client }: { client: Client }) {
+  const [errored, setErrored] = useState(false);
+
+  if (errored) return null;
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={client.logo}
+      alt={client.name}
+      width={160}
+      height={64}
+      onError={() => setErrored(true)}
+      className="max-h-full max-w-full object-contain"
+    />
+  );
+}
 
 export default function Clients({ clients }: { clients: Client[] }) {
   const loop = [...clients, ...clients];
@@ -15,14 +36,9 @@ export default function Clients({ clients }: { clients: Client[] }) {
           {loop.map((client, i) => (
             <div
               key={`${client.id}-${i}`}
-              className="flex shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100"
+              className="flex h-11 w-32 shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={client.logo}
-                alt={client.name}
-                className="h-9 w-auto object-contain sm:h-11"
-              />
+              <ClientLogo client={client} />
             </div>
           ))}
         </div>

@@ -1,29 +1,31 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import SelectedWorks from "@/components/SelectedWorks";
-import About from "@/components/About";
 import Clients from "@/components/Clients";
 import Contact from "@/components/Contact";
 import { listProjects, serializeProject } from "@/lib/db/projects";
 import { listClients, serializeClient } from "@/lib/db/clients";
+import { listCategories, serializeCategory } from "@/lib/db/categories";
 import { getSiteContent, serializeSiteContent } from "@/lib/db/siteContent";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [projectDocs, clientDocs, contentDoc] = await Promise.all([
+  const [projectDocs, clientDocs, categoryDocs, contentDoc] = await Promise.all([
     listProjects(),
     listClients(),
+    listCategories(),
     getSiteContent(),
   ]);
 
   const projects = projectDocs.map(serializeProject);
   const clients = clientDocs.map(serializeClient);
+  const categories = categoryDocs.map(serializeCategory);
   const content = serializeSiteContent(contentDoc);
 
   return (
     <>
-      <Nav contactEmail={content.contactEmail} />
+      <Nav contactPhone={content.contactPhone} />
       <main>
         <Hero
           eyebrow={content.heroEyebrow}
@@ -32,12 +34,7 @@ export default async function Home() {
           stats={content.stats}
         />
         <Clients clients={clients} />
-        <SelectedWorks projects={projects} />
-        <About
-          heading={content.aboutHeading}
-          paragraph={content.aboutParagraph}
-          photo={content.profilePhoto}
-        />
+        <SelectedWorks projects={projects} categories={categories} />
         <Contact email={content.contactEmail} phone={content.contactPhone} />
       </main>
     </>
