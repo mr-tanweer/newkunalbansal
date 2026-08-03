@@ -48,8 +48,18 @@ export default function Hero({
       />
 
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-1/3 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-700/15 blur-[160px]" />
-        <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-indigo-700/10 blur-[130px]" />
+        <div
+          className="absolute left-1/2 top-1/3 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(185,28,28,0.15) 0%, transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute right-0 bottom-0 h-96 w-96 rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(67,56,202,0.1) 0%, transparent 70%)",
+          }}
+        />
       </div>
 
       <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
