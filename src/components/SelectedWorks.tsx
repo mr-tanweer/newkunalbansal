@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import type { Category, Project } from "@/lib/types";
 import { thumbnailFor } from "@/lib/thumbnail";
 import VideoModal from "@/components/VideoModal";
@@ -17,13 +18,14 @@ function ProjectThumb({ project }: { project: Project }) {
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={src}
       alt={project.title}
+      fill
       loading="lazy"
+      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
       onError={() => setErrored(true)}
-      className="absolute inset-0 h-full w-full object-cover"
+      className="object-cover"
     />
   );
 }

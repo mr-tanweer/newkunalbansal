@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { Client } from "@/lib/types";
 
 function ClientLogo({ client }: { client: Client }) {
@@ -9,8 +10,7 @@ function ClientLogo({ client }: { client: Client }) {
   if (errored) return null;
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={client.logo}
       alt={client.name}
       width={160}

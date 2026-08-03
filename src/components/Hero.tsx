@@ -37,7 +37,7 @@ export default function Hero({
       id="top"
       ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="relative flex min-h-[88vh] flex-col justify-center overflow-hidden bg-black px-6 pt-24 pb-16 sm:px-10"
+      className="relative flex min-h-[88vh] flex-col justify-center overflow-hidden bg-black px-6 pt-24 pb-32 sm:px-10 lg:pb-16"
     >
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-60 transition-opacity duration-300"
@@ -55,8 +55,8 @@ export default function Hero({
       <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
         <motion.div style={{ y: contentY, opacity: contentOpacity }}>
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 12 }}
+            animate={{ y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 font-mono text-xs uppercase tracking-widest text-neutral-300 backdrop-blur-md"
           >
@@ -87,9 +87,9 @@ export default function Hero({
           </h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.9 }}
+            initial={{ y: 16 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
             className="mt-8 max-w-xl text-lg text-neutral-300 sm:text-xl"
           >
             {tagline}
@@ -97,9 +97,9 @@ export default function Hero({
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.9 }}
+          initial={{ y: 16 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
           style={{ y: contentY, opacity: contentOpacity }}
           className="grid grid-cols-2 gap-x-8 gap-y-8 border-t border-white/10 pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-12"
         >

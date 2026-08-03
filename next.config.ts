@@ -5,6 +5,14 @@ const nextConfig: NextConfig = {
     root: __dirname,
   },
   serverExternalPackages: ["mongodb"],
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "img.youtube.com" },
+      { protocol: "https", hostname: "i.vimeocdn.com" },
+      { protocol: "https", hostname: "vumbnail.com" },
+    ],
+    minimumCacheTTL: 31536000,
+  },
 };
 
 export default nextConfig;
