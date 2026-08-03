@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
+import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "logos");
@@ -31,8 +32,15 @@ export async function POST(request: Request) {
   }
 
   const filename = `${randomUUID()}.${extension}`;
-  const buffer = Buffer.from(await file.arrayBuffer());
 
+  // Vercel's serverless functions have a read-only filesystem, so uploads
+  // there must go to Blob storage; local dev writes straight to /public.
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const blob = await put(`logos/${filename}`, file, { access: "public" });
+    return NextResponse.json({ url: blob.url }, { status: 201 });
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
   await mkdir(UPLOAD_DIR, { recursive: true });
   await writeFile(path.join(UPLOAD_DIR, filename), buffer);
 

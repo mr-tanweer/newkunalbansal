@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "img.youtube.com" },
       { protocol: "https", hostname: "i.vimeocdn.com" },
       { protocol: "https", hostname: "vumbnail.com" },
+      { protocol: "https", hostname: "**.public.blob.vercel-storage.com" },
     ],
     minimumCacheTTL: 31536000,
   },
