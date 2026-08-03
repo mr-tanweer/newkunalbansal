@@ -6,7 +6,10 @@ export type ProjectDoc = {
   _id: ObjectId;
   title: string;
   client: string;
-  category: string;
+  categories: string[];
+  /** @deprecated legacy single-category field, kept for reading old documents */
+  category?: string;
+  showInAll?: boolean;
   platform: Platform;
   videoId: string;
   thumbnail: string;
@@ -19,7 +22,8 @@ export type ProjectDoc = {
 export type NewProjectInput = {
   title: string;
   client: string;
-  category: string;
+  categories: string[];
+  showInAll: boolean;
   platform: Platform;
   videoId: string;
   thumbnail: string;
@@ -36,7 +40,8 @@ export function serializeProject(doc: WithId<Document> | ProjectDoc): Project {
     id: d._id.toString(),
     title: d.title,
     client: d.client,
-    category: d.category,
+    categories: d.categories ?? (d.category ? [d.category] : []),
+    showInAll: d.showInAll ?? true,
     platform: d.platform,
     videoId: d.videoId,
     thumbnail: d.thumbnail ?? "",

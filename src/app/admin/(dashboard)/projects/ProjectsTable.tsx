@@ -59,7 +59,7 @@ export default function ProjectsTable({ projects }: { projects: Project[] }) {
               </td>
               <td className="px-4 py-3 text-white">{project.title}</td>
               <td className="px-4 py-3 text-neutral-400">{project.client}</td>
-              <td className="px-4 py-3 text-neutral-400">{project.category}</td>
+              <td className="px-4 py-3 text-neutral-400">{project.categories.join(", ")}</td>
               <td className="px-4 py-3 text-neutral-400">{project.platform}</td>
               <td className="px-4 py-3">
                 <input

@@ -12,13 +12,45 @@ export default function ClientForm({ client }: { client?: Client }) {
   const router = useRouter();
   const [name, setName] = useState(client?.name ?? "");
   const [logo, setLogo] = useState(client?.logo ?? "");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    setLogoFile(file);
+    if (file) setLogo(URL.createObjectURL(file));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setError("");
+
+    let logoUrl = client?.logo ?? "";
+
+    if (logoFile) {
+      const uploadData = new FormData();
+      uploadData.append("file", logoFile);
+      const uploadRes = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: uploadData,
+      });
+
+      if (!uploadRes.ok) {
+        setError("Failed to upload logo");
+        setSaving(false);
+        return;
+      }
+
+      logoUrl = (await uploadRes.json()).url;
+    }
+
+    if (!logoUrl) {
+      setError("Please choose a logo image");
+      setSaving(false);
+      return;
+    }
 
     const url = client ? `/api/admin/clients/${client.id}` : "/api/admin/clients";
     const method = client ? "PATCH" : "POST";
@@ -26,7 +58,7 @@ export default function ClientForm({ client }: { client?: Client }) {
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, logo }),
+      body: JSON.stringify({ name, logo: logoUrl }),
     });
 
     if (!res.ok) {
@@ -60,13 +92,13 @@ export default function ClientForm({ client }: { client?: Client }) {
       </label>
 
       <label className={labelClass}>
-        Logo Image URL
+        Logo Image
         <input
-          value={logo}
-          onChange={(e) => setLogo(e.target.value)}
-          required
-          placeholder="https://example.com/logo.png"
-          className={inputClass}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif"
+          onChange={handleFileChange}
+          required={!client}
+          className={`${inputClass} file:mr-4 file:rounded-full file:border-0 file:bg-white/10 file:px-4 file:py-1.5 file:font-mono file:text-xs file:uppercase file:tracking-widest file:text-white`}
         />
       </label>
 

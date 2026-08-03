@@ -17,18 +17,18 @@ export default function Contact({ email, phone }: { email: string; phone: string
         </h2>
 
         <a
-          href={`mailto:${email}`}
+          href={`tel:${phone.replace(/[^+\d]/g, "")}`}
           className="group mt-10 inline-flex items-center gap-4 text-2xl text-white transition-colors hover:text-neutral-300 sm:text-4xl"
         >
-          {email}
+          {phone}
           <span className="transition-transform duration-300 group-hover:translate-x-2">→</span>
         </a>
 
         <a
-          href={`tel:${phone.replace(/[^+\d]/g, "")}`}
+          href={`mailto:${email}`}
           className="mt-4 block font-mono text-lg text-neutral-400 transition-colors hover:text-white"
         >
-          {phone}
+          {email}
         </a>
       </motion.div>
 

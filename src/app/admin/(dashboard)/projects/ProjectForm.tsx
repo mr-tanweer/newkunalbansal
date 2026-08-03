@@ -25,7 +25,10 @@ export default function ProjectForm({
   const router = useRouter();
   const [title, setTitle] = useState(project?.title ?? "");
   const [client, setClient] = useState(project?.client ?? "");
-  const [category, setCategory] = useState(project?.category ?? categories[0]?.name ?? "");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    project?.categories ?? (categories[0] ? [categories[0].name] : [])
+  );
+  const [showInAll, setShowInAll] = useState(project?.showInAll ?? true);
   const [platform, setPlatform] = useState<Platform>(project?.platform ?? "vimeo");
   const [videoId, setVideoId] = useState(project?.videoId ?? "");
   const [thumbnail, setThumbnail] = useState(project?.thumbnail ?? "");
@@ -33,6 +36,12 @@ export default function ProjectForm({
   const [saving, setSaving] = useState(false);
   const [fetchingThumb, setFetchingThumb] = useState(false);
   const [error, setError] = useState("");
+
+  const toggleCategory = (name: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]
+    );
+  };
 
   const handleAutoFetchThumbnail = async () => {
     if (!videoId) return;
@@ -53,13 +62,28 @@ export default function ProjectForm({
     setSaving(true);
     setError("");
 
+    if (selectedCategories.length === 0) {
+      setError("Select at least one category");
+      setSaving(false);
+      return;
+    }
+
     const url = project ? `/api/admin/projects/${project.id}` : "/api/admin/projects";
     const method = project ? "PATCH" : "POST";
 
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, client, category, platform, videoId, thumbnail, gradient }),
+      body: JSON.stringify({
+        title,
+        client,
+        categories: selectedCategories,
+        showInAll,
+        platform,
+        videoId,
+        thumbnail,
+        gradient,
+      }),
     });
 
     if (!res.ok) {
@@ -102,37 +126,49 @@ export default function ProjectForm({
         />
       </label>
 
-      <div className="grid grid-cols-2 gap-4">
-        <label className={labelClass}>
-          Category
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-            className={inputClass}
-          >
-            {categories.length === 0 && <option value="">No categories yet</option>}
-            {categories.map((c) => (
-              <option key={c.id} value={c.name}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </label>
+      <label className={labelClass}>
+        Categories
+        <div className={`${inputClass} flex flex-wrap gap-x-4 gap-y-2`}>
+          {categories.length === 0 && (
+            <span className="text-neutral-500">No categories yet</span>
+          )}
+          {categories.map((c) => (
+            <label
+              key={c.id}
+              className="flex items-center gap-1.5 text-sm normal-case text-neutral-200"
+            >
+              <input
+                type="checkbox"
+                checked={selectedCategories.includes(c.name)}
+                onChange={() => toggleCategory(c.name)}
+              />
+              {c.name}
+            </label>
+          ))}
+        </div>
+      </label>
 
-        <label className={labelClass}>
-          Platform
-          <select
-            value={platform}
-            onChange={(e) => setPlatform(e.target.value as Platform)}
-            className={inputClass}
-          >
-            <option value="vimeo">Vimeo</option>
-            <option value="youtube">YouTube</option>
-            <option value="instagram">Instagram</option>
-          </select>
-        </label>
-      </div>
+      <label className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-neutral-400">
+        <input
+          type="checkbox"
+          checked={showInAll}
+          onChange={(e) => setShowInAll(e.target.checked)}
+        />
+        Show in &quot;All&quot; filter
+      </label>
+
+      <label className={labelClass}>
+        Platform
+        <select
+          value={platform}
+          onChange={(e) => setPlatform(e.target.value as Platform)}
+          className={inputClass}
+        >
+          <option value="vimeo">Vimeo</option>
+          <option value="youtube">YouTube</option>
+          <option value="instagram">Instagram</option>
+        </select>
+      </label>
 
       <label className={labelClass}>
         Video ID

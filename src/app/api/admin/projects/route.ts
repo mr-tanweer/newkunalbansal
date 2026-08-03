@@ -14,7 +14,10 @@ export async function POST(request: Request) {
     !body ||
     typeof body.title !== "string" ||
     typeof body.client !== "string" ||
-    typeof body.category !== "string" ||
+    !Array.isArray(body.categories) ||
+    body.categories.length === 0 ||
+    !body.categories.every((c: unknown) => typeof c === "string") ||
+    typeof body.showInAll !== "boolean" ||
     typeof body.platform !== "string" ||
     typeof body.videoId !== "string" ||
     typeof body.gradient !== "string"
@@ -29,7 +32,8 @@ export async function POST(request: Request) {
   const project = await createProject({
     title: body.title,
     client: body.client,
-    category: body.category,
+    categories: body.categories,
+    showInAll: body.showInAll,
     platform: body.platform,
     videoId: body.videoId,
     thumbnail,

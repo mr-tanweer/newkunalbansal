@@ -10,7 +10,8 @@ export type Project = {
   id: string;
   title: string;
   client: string;
-  category: string;
+  categories: string[];
+  showInAll: boolean;
   platform: Platform;
   videoId: string;
   thumbnail: string;

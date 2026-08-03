@@ -42,7 +42,10 @@ export default function SelectedWorks({
   const filters = ["All", ...categories.map((c) => c.name)];
 
   const filtered = useMemo(
-    () => (filter === "All" ? projects : projects.filter((p) => p.category === filter)),
+    () =>
+      filter === "All"
+        ? projects.filter((p) => p.showInAll)
+        : projects.filter((p) => p.categories.includes(filter)),
     [filter, projects]
   );
 

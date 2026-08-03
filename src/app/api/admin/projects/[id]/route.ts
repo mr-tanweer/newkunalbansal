@@ -24,9 +24,19 @@ export async function PATCH(
   const body = await request.json().catch(() => null);
   if (!body) return NextResponse.json({ error: "Invalid body" }, { status: 400 });
 
-  const update: Record<string, string | number> = {};
-  for (const key of ["title", "client", "category", "platform", "videoId", "thumbnail", "gradient"]) {
+  const update: Record<string, string | number | string[] | boolean> = {};
+  for (const key of ["title", "client", "platform", "videoId", "thumbnail", "gradient"]) {
     if (typeof body[key] === "string") update[key] = body[key];
+  }
+  if (
+    Array.isArray(body.categories) &&
+    body.categories.length > 0 &&
+    body.categories.every((c: unknown) => typeof c === "string")
+  ) {
+    update.categories = body.categories;
+  }
+  if (typeof body.showInAll === "boolean") {
+    update.showInAll = body.showInAll;
   }
   if (typeof body.order === "number" && Number.isFinite(body.order)) {
     update.order = body.order;

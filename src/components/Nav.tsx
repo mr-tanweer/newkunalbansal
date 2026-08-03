@@ -5,14 +5,13 @@ import { motion } from "framer-motion";
 
 const links = [
   { label: "Work", href: "#work" },
-  { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
 
 export default function Nav({
-  contactPhone = "+91-9991100099",
+  contactEmail = "kunalbansal11@gmail.com",
 }: {
-  contactPhone?: string;
+  contactEmail?: string;
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -49,7 +48,7 @@ export default function Nav({
             </a>
           ))}
           <a
-            href={`tel:${contactPhone.replace(/[^+\d]/g, "")}`}
+            href={`mailto:${contactEmail}`}
             className="rounded-full border border-white/30 px-4 py-2 text-xs tracking-widest text-white transition-colors hover:border-white hover:bg-white hover:text-black"
           >
             Let&apos;s Talk
