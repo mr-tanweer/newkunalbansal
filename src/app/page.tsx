@@ -25,7 +25,7 @@ export default async function Home() {
 
   return (
     <>
-      <Nav contactEmail={content.contactEmail} contactPhone={content.contactPhone} />
+      <Nav contactPhone={content.contactPhone} />
       <main>
         <Hero
           eyebrow={content.heroEyebrow}

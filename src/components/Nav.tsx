@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const links = [
@@ -9,16 +9,12 @@ const links = [
 ];
 
 export default function Nav({
-  contactEmail = "kunalbansal11@gmail.com",
   contactPhone = "+91-9991100099",
 }: {
-  contactEmail?: string;
   contactPhone?: string;
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [talkOpen, setTalkOpen] = useState(false);
-  const talkRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -26,17 +22,6 @@ export default function Nav({
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  useEffect(() => {
-    if (!talkOpen) return;
-    const onClickOutside = (e: MouseEvent) => {
-      if (talkRef.current && !talkRef.current.contains(e.target as Node)) {
-        setTalkOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [talkOpen]);
 
   return (
     <motion.header
@@ -62,33 +47,12 @@ export default function Nav({
               {link.label}
             </a>
           ))}
-          <div ref={talkRef} className="relative">
-            <button
-              onClick={() => setTalkOpen((o) => !o)}
-              className="rounded-full border border-white/30 px-4 py-2 text-xs tracking-widest text-white transition-colors hover:border-white hover:bg-white hover:text-black"
-            >
-              Let&apos;s Talk
-            </button>
-
-            {talkOpen && (
-              <div className="absolute right-0 mt-2 flex w-40 flex-col overflow-hidden rounded-xl border border-white/15 bg-black shadow-lg">
-                <a
-                  href={`tel:${contactPhone.replace(/[^+\d]/g, "")}`}
-                  onClick={() => setTalkOpen(false)}
-                  className="px-4 py-3 text-left text-xs uppercase tracking-widest text-neutral-300 transition-colors hover:bg-white/10 hover:text-white"
-                >
-                  Call
-                </a>
-                <a
-                  href={`mailto:${contactEmail}`}
-                  onClick={() => setTalkOpen(false)}
-                  className="border-t border-white/10 px-4 py-3 text-left text-xs uppercase tracking-widest text-neutral-300 transition-colors hover:bg-white/10 hover:text-white"
-                >
-                  Email
-                </a>
-              </div>
-            )}
-          </div>
+          <a
+            href={`tel:${contactPhone.replace(/[^+\d]/g, "")}`}
+            className="rounded-full border border-white/30 px-4 py-2 text-xs tracking-widest text-white transition-colors hover:border-white hover:bg-white hover:text-black"
+          >
+            Let&apos;s Talk
+          </a>
         </div>
 
         <button
